@@ -1,0 +1,37 @@
+version: "3" 
+services:
+  web_cocoon:
+    image: alexrogna/cocoon_web:prod
+    expose:
+      - 3000
+    env_file:
+      - .env/production/database_cocoon
+      - .env/production/web_cocoon
+    environment:
+      - VIRTUAL_HOST=cocoon.alexrogna.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=cocoon.alexrogna.com
+    networks:
+      - proxy
+    restart: always
+
+  database_cocoon:
+    image: postgres
+    env_file:
+      - .env/production/database_cocoon
+    volumes:
+      - db_data_cocoon:/var/lib/postgresql/data
+    networks:
+      - proxy
+    restart: always
+    
+  db-migrator_cocoon:
+    image: alexrogna/cocoon_web:prod
+    command: ["./wait-for", "--timeout=300", "database_cocoon:5432", "--", "bin/rails", "db:create" , "db:migrate"]
+    env_file:
+      - .env/production/database_cocoon
+      - .env/production/web_cocoon
+volumes:
+  db_data_cocoon:
+networks:
+  proxy:
