@@ -16,6 +16,8 @@ services:
       - .env/development/web_cocoon
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_cocoon
+    networks:
+      - network
   webpack_dev_server_cocoon:
     build:
       context: .
@@ -33,12 +35,18 @@ services:
       - .env/development/web_cocoon
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    networks:
+      - network
   database_cocoon:
     image: postgres
     env_file: 
       - .env/development/database_cocoon
     volumes: 
       - db_data_cocoon:/var/lib/postgresql/data
+    networks:
+      - network
 volumes: 
   db_data_cocoon:
   gem_cache_cocoon:
+networks:
+  network:

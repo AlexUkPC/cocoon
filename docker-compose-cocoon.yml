@@ -31,6 +31,8 @@ services:
     env_file:
       - .env/production/database_cocoon
       - .env/production/web_cocoon
+    networks:
+      - proxy
 volumes:
   db_data_cocoon:
 networks:
